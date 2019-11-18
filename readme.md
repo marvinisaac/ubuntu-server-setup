@@ -148,7 +148,7 @@
         # Copy the output to clipboard
         ```
 
-    #### In the houst:
+    #### In the host:
 
     1. Create private key file (i.e. `private`)
 
@@ -183,4 +183,8 @@
 
 - Notes
 
-- TODO
+- <details><summary>TODO</summary>
+
+    - Research how to run Ubuntu commands at startup
+
+    </details>
