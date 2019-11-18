@@ -181,7 +181,20 @@
 
 - Setup automatic VM headless start
 
-- Notes
+- <details><summary>Notes</summary>
+
+    1. Install optional packages with:
+
+        ```
+        sudo apt install {{package name}}
+        ```
+
+        - List of optional packages:
+            
+            - `php-pgsql` (PostgreSQL driver)
+            - `php-sqlite3` (SQLite3 driver)
+
+    </details>
 
 - <details><summary>TODO</summary>
 
