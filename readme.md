@@ -11,58 +11,27 @@ From the start, this guide assumes several things:
 
 ## Setup Steps
 
-1. <details><summary>Get and install updates</summary>
-
+1. Get and install updates
     ```
-    sudo apt update
-    sudo apt upgrade
+    sudo apt update && sudo apt upgrade
     ```
 
-    </details>
-
-2. <details><summary>Set correct timezone</summary>
-
+2. Set correct timezone
     ```
     sudo dpkg-configure tzdata
-    # In case of `command not found` error
-    #sudo dpkg-reconfigure tzdata
     ```
 
-    </details>
+    - In case of **command not found** error, try `sudo dpkg-reconfigure tzdata`
 
+3. Install LEMP stack and other must-have packages
 
-3. <details><summary>Install LEMP stack with other must-have packages</summary>
-
-    #### In the guest:
-
-    1. Install LEMP stack:
-
+    1. Install LEMP and other must-have packages:
         ```
-        sudo apt install
-            mariadb-server
-            nginx
-            php-fpm
-        reboot
-        ```
-    
-    2. Install other must-have packages:
-        
-        ```
-        sudo apt install
-            curl
-            git
-            libcurl3
-            libcurl3-dev
-            php-cli
-            php-curl
-            php-mbstring
-            php-mysql
-            php-xml
-            unzip
+        sudo apt install mariadb-server nginx php-fpm
+        sudo apt install curl git nodejs npm php-cli php-curl php-mbstring php-mysql php-xml unzip
         ```
 
-    3. Install `composer` globally:
-    
+    2. Install `composer` globally:
         ```
         curl -sS https://getcomposer.org/installer
             -o composer-setup.php
@@ -72,54 +41,24 @@ From the start, this guide assumes several things:
         rm composer-setup.php
         ```
 
-    4. Install `nodejs` and `npm` globally:
-
-        ```
-        sudo apt install
-            nodejs
-            npm
-        ```
-
-    5. Install `gitmoji-cli`
-
-        ```
-        npm i -g gitmoji-cli
-        ```
-
-    6. Setup git user
-
-        ```
-        git config --global user.name "{{user name}}"
-        git config --global user.email {{user email address}}
-        ```
-
-    </details>
-
-4. <details><summary>Setup keys and enable SSH access</summary>
+4. Setup keys and enable SSH access
 
     #### In the guest:
 
     1. Generate a new 4096-bit SSH key pair:
-
         ```
-        ssh-keygen
-            -b 4096
-            -t rsa
-            -C "{{comment to identify the key (i.e. machine name)>"
+        ssh-keygen -b 4096 -t rsa -C "{{comment to identify the key (i.e. machine name)>"
         ```
 
     2. Copy the public key for external services like Github:
-
         ```
         cat ~/.ssh/{{public key file name}}
         ```
 
     3. Enable SSH access and copy private key:
-
         ```
         ssh-copy-id {{user (i.e. marvin)}}@{{host name (i.e. localhost)}}
         cat ~/.ssh/{{private key file name}}
-        # Copy the output to clipboard
         ```
 
     #### In the host:
@@ -142,8 +81,6 @@ From the start, this guide assumes several things:
         ```
         ssh {{server name (i.e. my-localhost)}}
         ```
-
-    </details>
 
 5. Setup project
 
