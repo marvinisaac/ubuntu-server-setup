@@ -7,6 +7,8 @@ From the start, this guide assumes several things:
 - Windows host OS
 - VirtualBox virtual machine
 
+- - - - -
+
 ## Setup Steps
 
 1. <details><summary>Get and install updates</summary>
@@ -220,11 +222,11 @@ From the start, this guide assumes several things:
         sudo reboot
         ```
 
-    <details>
+    </details>
 
 - <details><summary>Customize terminal display</summary>
 
-    > Based on experience, changing the colors are *required*. 
+    > Based on experience, changing the colors are *required*.
     > Default colors of shared folders are undreadable.
 
     ```
@@ -239,7 +241,19 @@ From the start, this guide assumes several things:
 
     </details>
 
-- Setup automatic VM headless start
+- <details><summary>Setup automatic VM headless start</summary>
+
+    ### In the host:
+
+    1. Create a `.bat` file in the Startup folder
+        ```
+        cd "{{location of VirtualBox (i.e. C:\Program Files\VirtualBox)}}"
+        .\vboxmanage startvm "{{VM name (i.e. Local Host)}}" --type headless
+        # To prevent auto-close of command line, add
+        # cmd \k
+        ```
+
+    </details>
 
 - <details><summary>Notes</summary>
 
