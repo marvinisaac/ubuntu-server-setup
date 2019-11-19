@@ -255,6 +255,38 @@ From the start, this guide assumes several things:
 
     </details>
 
+- <details><summary>Setup static IP</summary>
+
+    ### In the host:
+
+    1. Change the VM's settings
+        - Select the VM > "Settings" > "Network" > "Attached to: Bridged Adapter"
+
+    2. Run `ipconfig` and take note of value of `Default Gateway`
+
+    ### In the guest:
+
+    1. Update the file inside `/etc/netplan` (i.e. `50-cloud-init.yaml`)
+        ```
+        network:
+            version: 2
+            renderer: networkd
+            ethernets:
+                enp0s3:
+                    dhcp4: no
+                    addresses: [{{static IP (i.e. 192.168.1.99)}}/24]
+                    gateway4: {{default gateway of host (i.e. 192.168.1.1)}}
+                    nameservers:
+                        addresses: [8.8.8.8,8.8.4.4]
+        ```
+
+    2. Check and apply new settings
+        ```
+        sudo netplan --debug apply
+        ```
+
+    </details>
+
 - <details><summary>Notes</summary>
 
     1. Install optional packages with:
