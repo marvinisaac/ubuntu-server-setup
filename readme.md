@@ -1,3 +1,12 @@
+# Ubuntu Sever Setup
+
+[Marvin](https://marvinisaac.com)'s guide on setting up a local Ubuntu server.
+
+From the start, this guide assumes several things:
+
+- Windows host OS
+- VirtualBox virtual machine
+
 ## Setup Steps
 
 1. <details><summary>Get and install updates</summary>
@@ -13,55 +22,14 @@
 
     ```
     sudo dpkg-configure tzdata
+    # In case of `command not found` error
+    #sudo dpkg-reconfigure tzdata
     ```
 
     </details>
 
-3. <details><summary>Install Glances for system monitoring</summary>
 
-    ```
-    curl -L https://bit.ly/glances | /bin/bash
-    ```
-    
-    - *To run in CLI mode:*
-
-        ```
-        glances
-        ```
-    
-    - *To run in browser mode:*
-
-        ```
-        glances -w
-        ```
-
-    </details>
-
-4. <details><summary>Install GoAccess for access log monitoring</summary>
-
-    ```
-    sudo apt-get install goaccess
-    ```
-    
-    - *To run in CLI mode:*
-
-        ```
-        goaccess <access log location (i.e. /var/log/nginx/access.log)>
-            -c
-        ```
-    
-    - *To run in browser mode:*
-
-        ```
-        goaccess <access log location (i.e. /var/log/nginx/access.log)
-            -o <HTML file location (i.e. /var/www/html/goaccess/index.html)>
-            --log-format=COMBINED
-            --real-time-html
-        ```
-
-    </details>
-
-5. <details><summary>Install LEMP stack with other must-have packages</summary>
+3. <details><summary>Install LEMP stack with other must-have packages</summary>
 
     #### In the guest:
 
@@ -121,7 +89,7 @@
 
     </details>
 
-6. <details><summary>Setup keys and enable SSH access</summary>
+4. <details><summary>Setup keys and enable SSH access</summary>
 
     #### In the guest:
 
@@ -171,13 +139,105 @@
 
     </details>
 
-7. Setup project folder
-
-8. Setup project with HTTPS
+5. Setup project
 
 ## Appendix
 
-- Install and setup folder sharing between host and guest OS
+- <details><summary>Install Glances for system monitoring</summary>
+
+    ```
+    curl -L https://bit.ly/glances | /bin/bash
+    ```
+    
+    - *To run in CLI mode:*
+
+        ```
+        glances
+        ```
+    
+    - *To run in browser mode:*
+
+        ```
+        glances -w
+        ```
+
+    </details>
+
+- <details><summary>Install GoAccess for access log monitoring</summary>
+
+    ```
+    sudo apt-get install goaccess
+    ```
+    
+    - *To run in CLI mode:*
+
+        ```
+        goaccess <access log location (i.e. /var/log/nginx/access.log)>
+            -c
+        ```
+    
+    - *To run in browser mode:*
+
+        ```
+        goaccess <access log location (i.e. /var/log/nginx/access.log)
+            -o <HTML file location (i.e. /var/www/html/goaccess/index.html)>
+            --log-format=COMBINED
+            --real-time-html
+        ```
+
+    </details>
+
+- <details><summary>Install and setup folder sharing between host and guest OS</summary>
+
+    ### In the host:
+
+    1. Setup shared folder
+        - VirtualBox Menu > "Machine" > "Shared Folders" > "Add New Shared Folder"
+        - Check "Make Permanent" and "Auto-mount"
+        - Add folder path(s) and name(s)
+
+    ### In the guest:
+
+    1. Insert installer
+        - VirtualBox Menu > "Devices" > "Insert Guest Additions CD Image"
+
+    2. Install in virtual machine
+        ```
+        sudo mount /dev/cdrom /mnt
+        sudo apt-get install build-essential linux-headers-`uname -r`
+        sudo /mnt/./VBoxLinuxAdditions.run
+        sudo reboot
+        ```
+
+    3. Setup auto-mount
+        ```
+        sudo nano /etc/fstab
+        # Insert line and save
+        # {{shared folder name (i.e. shared)}}  {{mount point (i.e. /var/www/shared/)}}  vboxsf  defaults  0  0
+        sudo nano /etc/modules
+        # Insert line and save
+        # vboxsf
+        sudo reboot
+        ```
+
+    <details>
+
+- <details><summary>Customize terminal display</summary>
+
+    > Based on experience, changing the colors are *required*. 
+    > Default colors of shared folders are undreadable.
+
+    ```
+    sudo nano ~/.bashrc
+    # To turn shared folders to white text on green background, add to end of file:
+    # LS_COLORS="ow=97;42"
+    # export LS_COLORS
+    #
+    # To show "{{time}} {{user}} {{current directory}} $ ", find PS1 value and change to:
+    # PS1='\A \u \w \$ '
+    ```
+
+    </details>
 
 - Setup automatic VM headless start
 
@@ -196,8 +256,8 @@
 
     </details>
 
-- <details><summary>TODO</summary>
+- <details><summary><strong>TODO</strong></summary>
 
-    - Research how to run Ubuntu commands at startup
+    - Research how to run services and custom commands at startup
 
     </details>
