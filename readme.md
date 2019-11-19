@@ -51,9 +51,13 @@ From the start, this guide assumes several things:
         sudo apt install
             curl
             git
+            libcurl3
+            libcurl3-dev
             php-cli
+            php-curl
             php-mbstring
             php-mysql
+            php-xml
             unzip
         ```
 
