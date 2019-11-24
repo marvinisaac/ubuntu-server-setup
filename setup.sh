@@ -151,7 +151,7 @@ setup_keys () {
     wait
 
     ssh-copy-id $user@localhost
-    printf ">>> SSH keys enabled."
+    printf ">>> SSH keys enabled.\n"
     wait
 }
 
@@ -160,6 +160,7 @@ setup_static_ip () {
     wait
 
     filename="/etc/netplan/50-cloud-init.yaml"
+    sudo cp $filename $filename.backup
     sudo cat <<EOF >> $filename
 network:
   version: 2
