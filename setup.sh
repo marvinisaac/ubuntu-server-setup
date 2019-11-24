@@ -164,7 +164,7 @@ setup_timezone () {
 setup_keys () {
     printf "> Setting up SSH keys...\n"
     wait
-    cat /dev/null | ssh-keygen -b 4096 -t rsa -f ~/.ssh -C "$identifier" -q -N ""
+    ssh-keygen -b 4096 -t rsa -C "$identifier"
 
     printf ">>> SSH keys setup.\n"
     wait
