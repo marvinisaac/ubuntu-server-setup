@@ -6,93 +6,155 @@ wait () {
 }
 
 setup_user () {
-    user=$(whoami)
-    printf "Script is running under \"$user\".\n"
+    printf "> Script is currently running under \"$user\".\n"
     wait
-    printf "(A) Enter username to run script as, or\n"
-    printf "(B) enter nothing to run as \"$user\".\n"
+
+    printf "> (A) Type username to use in script, or\n"
+    printf "> (B) press enter to run as \"$user\".\n"
+    printf ">> Waiting for input: "
     read username
-    if "$username" = ""
+    if [ "$username" != "" ]
     then
-        username=user
+        user=$username
+        printf "> You entered: \"$user\".\n"
+        wait
     fi
-    printf "Running the script as $username.\n"
+
+    printf "> Using \"$user\" in script.\n"
     wait
 }
 
-update () {
+update_system () {
     printf "> Updating system...\n"
     wait
-    
+
     printf "> Getting updates...\n"
     wait
     sudo apt update -y
-    
+
     printf "> Installing updates...\n"
     wait
     sudo apt upgrade -y
-    
+
     printf ">>> Updates installed.\n"
     wait
 }
 
-install () {
+install_packages () {
     printf "> Installing LEMP stack...\n"
     wait
     sudo apt install mariadb-server nginx php-fpm -y
-    
+
     printf ">>> LEMP stack installed.\n"
     wait
-    
+
     printf "> Installing required packages...\n"
     wait
     sudo apt install curl git php-cli php-curl php-mbstring php-mysql php-xml unzip -y
-    
+
     printf "> Required packages installed.\n"
     wait
-    
+
     printf "> Installing Node and npm...\n"
     wait
     sudo apt install nodejs npm -y
-    
+
     printf ">>> Node and npm installed.\n"
     wait
-    
+
     printf "> Installing Composer...\n"
     wait
     curl https://getcomposer.org/installer -o composer-setup.php
     sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
     rm composer-setup.php
-    
+
     printf ">>> Composer installed.\n"
     wait
-    
+
     printf ">>> Installations complete.\n"
     wait
 }
 
-alias () {
-    printf "> Setting up custom commands...\n"
-    wait
-    
-    # Remove custom commands
-    sed "/alias $username/d" ~/.bashrc -in
+setup_timezone () {
+    if hash dpkg-configure 2>/dev/null
+    then
+        sudo dpkg-configure tzdata
+    else
+        sudo dpkg-reconfigure tzdata
+    fi
+}
 
-    # Write aliases to ~/.bashrc
-    echo "alias $username-status=\"htop\"" >> ~/.bashrc
-    echo "alias $username-shutdown=\"sudo shutdown -h 0\"" >> ~/.bashrc
-    
-    # Reload terminal to make aliases usable
-    source ~/.bashrc
-    
-    printf ">>> Custom commands online.\n"
+setup_keys () {
+    printf "> Setting up SSH keys...\n"
+    wait
+
+    printf ">> Enter SSH key identifier: "
+    read identifier
+    ssh-keygen -b 4096 -t rsa -C "$identifier"
+
+    printf ">>> SSH keys setup.\n"
     wait
 }
 
-$username="marvin"
-update
-install
-alias
+setup_static_ip () {
+    printf "> Setting up static IP address...\n"
+    wait
+
+    printf ">> Enter IP address to use: "
+    read ip
+    printf ">> Enter gateway IP address: "
+    read gateway
+    filename="/etc/netplan/50-cloud-init.yaml"
+    cat <<EOF >> $filename
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s3:
+      dhcp4: no
+      addresses: [$ip/24]
+      gateway4: $gateway
+      nameservers:
+        addresses: [8.8.8.8, 8.8.4.4]
+EOF
+    sudo netplan apply --debug
+    printf ">>> Static IP address setup."
+    wait
+}
+
+setup_commands () {
+    printf "> Setting up custom commands...\n"
+    wait
+
+    # Remove custom commands
+    sed "/alias $user/d" ~/.bashrc -in
+
+    # Write aliases to ~/.bashrc
+    echo "alias $user-show-system-status=\"htop\"" >> ~/.bashrc
+    echo "alias $user-shutdown=\"sudo shutdown -h 0\"" >> ~/.bashrc
+    echo "alias $user-show-private-key=\"cat ~/.ssh/id_rsa\"" >> ~/.bashrc
+    echo "alias $user-show-public-key=\"cat ~/.ssh/id_rsa.pub\"" >> ~/.bashrc
+    echo "alias $user-show-commands=\"sed '/alias $user-/p' ~/.bashrc -n\"" >> ~/.bashrc
+    echo "alias $user-hello=\"echo Hello!\"" >> ~/.bashrc
+    printf ">>> Custom commands setup.\n"
+    wait
+
+    printf "> Loading custom commands...\n"
+    # Reload terminal to make aliases usable
+    source ~/.bashrc
+
+    printf ">>> Custom commands loaded.\n"
+    wait
+}
+
+user=$(whoami)
+# setup_user
+# update_system
+# install_packages
+# setup_timezone
+# setup_keys
+setup_static_ip
+setup_commands
 
 printf "   _____      __                                            __     __     \n";
 printf "  / ___/___  / /___  ______     _________  ____ ___  ____  / /__  / /____ \n";
