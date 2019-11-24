@@ -76,7 +76,7 @@ alias () {
     wait
     
     # Remove custom commands
-    sed '/alias $username/d' ~/.bashrc -in
+    sed "/alias $username/d" ~/.bashrc -in
 
     # Write aliases to ~/.bashrc
     echo "alias $username-status=\"htop\"" >> ~/.bashrc
@@ -89,7 +89,7 @@ alias () {
     wait
 }
 
-setup_user
+$username="marvin"
 update
 install
 alias
