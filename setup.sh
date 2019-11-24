@@ -161,6 +161,7 @@ setup_static_ip () {
 
     filename="/etc/netplan/50-cloud-init.yaml"
     sudo mv $filename $filename.backup
+    sudo touch $filename
     sudo cat <<EOF >> $filename
 network:
   version: 2
