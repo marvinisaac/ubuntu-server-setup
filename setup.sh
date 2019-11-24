@@ -24,9 +24,9 @@ setup_user_variable () {
 }
 
 setup_identifier_variable () {
-    printf "> Default SSH key identifier is $identifier."
+    printf "> Default SSH key identifier is $identifier.\n"
     printf "> (A) Type a new identifier, or\n"
-    printf "> (B) press enter to use $identifier."
+    printf "> (B) press enter to use $identifier.\n"
     echo ">> Enter SSH key identifier: "
     read identifier_input < /dev/tty
     if [ "$identifier_input" != "" ]
@@ -41,9 +41,9 @@ setup_identifier_variable () {
 }
 
 setup_ip_variable () {
-    printf "> Default static IP address is $ip."
+    printf "> Default static IP address is $ip.\n"
     printf "> (A) Type a new IP address, or\n"
-    printf "> (B) press enter to use $ip."
+    printf "> (B) press enter to use $ip.\n"
     echo ">> Enter static IP address: "
     read ip_input < /dev/tty
     if [ "$ip_input" != "" ]
@@ -58,9 +58,9 @@ setup_ip_variable () {
 }
 
 setup_gateway_variable () {
-    printf "> Default gateway IP address is $gateway."
+    printf "> Default gateway IP address is $gateway.\n"
     printf "> (A) Type a new IP address, or\n"
-    printf "> (B) press enter to use $gateway."
+    printf "> (B) press enter to use $gateway.\n"
     echo ">> Enter gateway IP address: "
     read gateway_input < /dev/tty
     if [ "$gateway_input" != "" ]
@@ -147,12 +147,18 @@ install_packages () {
 }
 
 setup_timezone () {
+    printf "> Configure system timezone...\n"
+    wait
+
     if hash dpkg-configure 2>/dev/null
     then
         sudo dpkg-configure tzdata
     else
         sudo dpkg-reconfigure tzdata
     fi
+
+    printf ">>> System timezone configured.\n"
+    wait
 }
 
 setup_keys () {
