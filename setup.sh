@@ -7,12 +7,12 @@ wait () {
 
 setup_user () {
     user=$(whoami)
-    printf "Script is running under $user.\n"
+    printf "Script is running under \"$user\".\n"
     wait
     printf "(A) Enter username to run script as, or\n"
-    printf "(B) enter nothing to run as $user.\n"
+    printf "(B) enter nothing to run as \"$user\"".\n"
     read username
-    if [ "$username" = ""]
+    if "$username" = ""
     then
         username=user
     fi
