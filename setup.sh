@@ -147,7 +147,7 @@ install_packages () {
 }
 
 setup_timezone () {
-    printf "> Configure system timezone...\n"
+    printf "> Configuring system timezone...\n"
     wait
 
     if hash dpkg-configure 2>/dev/null
@@ -164,7 +164,7 @@ setup_timezone () {
 setup_keys () {
     printf "> Setting up SSH keys...\n"
     wait
-    ssh-keygen -b 4096 -t rsa -C "$identifier" -q -N ""
+    cat /dev/null | ssh-keygen -b 4096 -t rsa -f ~/.ssh -C "$identifier" -q -N ""
 
     printf ">>> SSH keys setup.\n"
     wait
