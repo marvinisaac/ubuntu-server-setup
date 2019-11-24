@@ -75,11 +75,11 @@ update_system () {
 
     printf "> Getting updates...\n"
     wait
-    sudo apt update -qq
+    sudo apt update -y
 
     printf "> Installing updates...\n"
     wait
-    sudo apt upgrade -qq
+    sudo apt upgrade -y
 
     printf ">>> Updates installed.\n"
     wait
@@ -88,21 +88,21 @@ update_system () {
 install_packages () {
     printf "> Installing LEMP stack...\n"
     wait
-    sudo apt install mariadb-server nginx php-fpm -qq
+    sudo apt install mariadb-server nginx php-fpm -y
 
     printf ">>> LEMP stack installed.\n"
     wait
 
     printf "> Installing required packages...\n"
     wait
-    sudo apt install curl git php-cli php-curl php-mbstring php-mysql php-xml unzip zip -qq
+    sudo apt install curl git php-cli php-curl php-mbstring php-mysql php-xml unzip zip -y
 
     printf "> Required packages installed.\n"
     wait
 
     printf "> Installing Node and npm...\n"
     wait
-    sudo apt install nodejs npm -qq
+    sudo apt install nodejs npm -y
 
     printf ">>> Node and npm installed.\n"
     wait
