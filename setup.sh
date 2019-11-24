@@ -160,7 +160,7 @@ setup_static_ip () {
     wait
 
     filename="/etc/netplan/50-cloud-init.yaml"
-    sudo cp $filename $filename.backup
+    sudo mv $filename $filename.backup
     sudo cat <<EOF >> $filename
 network:
   version: 2
