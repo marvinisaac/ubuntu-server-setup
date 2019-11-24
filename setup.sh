@@ -103,7 +103,7 @@ setup_keys () {
     wait
 
     echo ">> Enter SSH key identifier: "
-    read identifier
+    read identifier < /dev/tty
     ssh-keygen -b 4096 -t rsa -C "$identifier"
 
     printf ">>> SSH keys setup.\n"
@@ -119,9 +119,9 @@ setup_static_ip () {
     wait
 
     echo ">> Enter IP address to use: "
-    read ip
+    read ip < /dev/tty
     echo ">> Enter gateway IP address: "
-    read gateway
+    read gateway < /dev/tty
     filename="/etc/netplan/50-cloud-init.yaml"
     cat <<EOF >> $filename
 network:
