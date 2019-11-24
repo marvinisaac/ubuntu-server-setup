@@ -5,6 +5,21 @@ wait () {
     sleep 2
 }
 
+setup_user () {
+    user=$(whoami)
+    printf "Script is running under $user.\n"
+    wait
+    printf "(A) Enter username to run script as, or\n"
+    printf "(B) enter nothing to run as $user.\n"
+    read username
+    if [ "$username" = ""]
+    then
+        username=user
+    fi
+    printf "Running the script as $username.\n"
+    wait
+}
+
 update () {
     printf "> Updating system...\n"
     wait
@@ -26,7 +41,7 @@ install () {
     wait
     sudo apt install mariadb-server nginx php-fpm -y
     
-    printf ">>> LEMP installed.\n"
+    printf ">>> LEMP stack installed.\n"
     wait
     
     printf "> Installing required packages...\n"
@@ -61,11 +76,11 @@ alias () {
     wait
     
     # Remove custom commands
-    sed '/alias marvin/d' ~/.bashrc -in
+    sed '/alias $username/d' ~/.bashrc -in
 
     # Write aliases to ~/.bashrc
-    echo "alias marvin-status=\"htop\"" >> ~/.bashrc
-    echo "alias marvin-exit=\"shutdown -h 0\"" >> ~/.bashrc
+    echo "alias $username-status=\"htop\"" >> ~/.bashrc
+    echo "alias $username-shutdown=\"sudo shutdown -h 0\"" >> ~/.bashrc
     
     # Reload terminal to make aliases usable
     source ~/.bashrc
@@ -74,6 +89,7 @@ alias () {
     wait
 }
 
+setup_user
 update
 install
 alias
