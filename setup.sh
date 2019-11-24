@@ -5,23 +5,80 @@ wait () {
     sleep 2
 }
 
-setup_user () {
+setup_user_variable () {
+    # Setup user prefix for custom commands (i.e. marvin-commands)
     printf "> Script is currently running under \"$user\".\n"
-    wait
-
-    printf "> (A) Type username to use in script, or\n"
-    printf "> (B) press enter to run as \"$user\".\n"
+    printf "> (A) Type another username to use as, or\n"
+    printf "> (B) press enter to continue running under \"$user\".\n"
     echo ">> Waiting for input: "
-    read username < /dev/tty
-    if [ "$username" != "" ]
+    read user_input < /dev/tty
+    if [ "$user_input" != "" ]
     then
-        user=$username
+        user=$user_input
         printf "> You entered: \"$user\".\n"
         wait
     fi
 
     printf "> Using \"$user\" in script.\n"
     wait
+}
+
+setup_identifier_variable () {
+    printf "> Default SSH key identifier is $identifier."
+    printf "> (A) Type a new identifier, or\n"
+    printf "> (B) press enter to use $identifier."
+    echo ">> Enter SSH key identifier: "
+    read identifier_input < /dev/tty
+    if [ "$identifier_input" != "" ]
+    then
+        identifier=$identifier_input
+        printf "> You entered: \"$identifier\".\n"
+        wait
+    fi
+    
+    printf "> Using \"$identifier\" as SSH key identifier.\n"
+    wait
+}
+
+setup_ip_variable () {
+    printf "> Default static IP address is $ip."
+    printf "> (A) Type a new IP address, or\n"
+    printf "> (B) press enter to use $ip."
+    echo ">> Enter static IP address: "
+    read ip_input < /dev/tty
+    if [ "$ip_input" != "" ]
+    then
+        ip=$ip_input
+        printf "> You entered: \"$ip\".\n"
+        wait
+    fi
+    
+    printf "> Using \"$ip\" as static IP address.\n"
+    wait
+}
+
+setup_gateway_variable () {
+    printf "> Default gateway IP address is $gateway."
+    printf "> (A) Type a new IP address, or\n"
+    printf "> (B) press enter to use $gateway."
+    echo ">> Enter gateway IP address: "
+    read gateway_input < /dev/tty
+    if [ "$gateway_input" != "" ]
+    then
+        gateway=$gateway_input
+        printf "> You entered: \"$gateway\".\n"
+        wait
+    fi
+    
+    printf "> Using \"$gateway\" as gateway IP address.\n"
+    wait
+}
+
+setup_script_variables () {
+    setup_user_variable
+    setup_identifier_variable
+    setup_ip_variable
+    setup_gateway_variable
 }
 
 update_system () {
@@ -43,21 +100,21 @@ update_system () {
 install_packages () {
     printf "> Installing LEMP stack...\n"
     wait
-    sudo apt install mariadb-server nginx php-fpm -y
+    sudo apt install mariadb-server nginx php-fpm -qq
 
     printf ">>> LEMP stack installed.\n"
     wait
 
     printf "> Installing required packages...\n"
     wait
-    sudo apt install curl git php-cli php-curl php-mbstring php-mysql php-xml unzip -y
+    sudo apt install curl git php-cli php-curl php-mbstring php-mysql php-xml unzip zip -qq
 
     printf "> Required packages installed.\n"
     wait
 
     printf "> Installing Node and npm...\n"
     wait
-    sudo apt install nodejs npm -y
+    sudo apt install nodejs npm -qq
 
     printf ">>> Node and npm installed.\n"
     wait
@@ -73,14 +130,14 @@ install_packages () {
 
     printf "> Installing Glances...\n"
     wait
-    curl https://bit.ly/glances | /bin/bash
+    curl -L https://bit.ly/glances | /bin/bash
 
     printf ">>> Glances installed.\n"
     wait
 
     printf "> Installing GoAccess...\n"
     wait
-    sudo apt-get install goaccess
+    sudo apt-get install goaccess -qq > /dev/null
 
     printf ">>> GoAccess installed.\n"
     wait
@@ -101,9 +158,6 @@ setup_timezone () {
 setup_keys () {
     printf "> Setting up SSH keys...\n"
     wait
-
-    echo ">> Enter SSH key identifier: "
-    read identifier < /dev/tty
     ssh-keygen -b 4096 -t rsa -C "$identifier"
 
     printf ">>> SSH keys setup.\n"
@@ -118,10 +172,6 @@ setup_static_ip () {
     printf "> Setting up static IP address...\n"
     wait
 
-    echo ">> Enter IP address to use: "
-    read ip < /dev/tty
-    echo ">> Enter gateway IP address: "
-    read gateway < /dev/tty
     filename="/etc/netplan/50-cloud-init.yaml"
     cat <<EOF >> $filename
 network:
@@ -176,10 +226,13 @@ EOF
 }
 
 user=$(whoami)
-setup_user
+identifier="local-server"
+ip="192.168.1.250"
+gateway="192.168.1.1"
+setup_script_variables
+setup_timezone
 update_system
 install_packages
-setup_timezone
 setup_keys
 setup_static_ip
 setup_terminal
