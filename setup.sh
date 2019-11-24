@@ -12,7 +12,7 @@ setup_user () {
     printf "> (A) Type username to use in script, or\n"
     printf "> (B) press enter to run as \"$user\".\n"
     echo ">> Waiting for input: "
-    read username
+    read username < /dev/tty
     if [ "$username" != "" ]
     then
         user=$username
