@@ -11,8 +11,7 @@ setup_user () {
 
     printf "> (A) Type username to use in script, or\n"
     printf "> (B) press enter to run as \"$user\".\n"
-    printf ">> Waiting for input: "
-    read username
+    read -p ">> Waiting for input: " username
     if [ "$username" != "" ]
     then
         user=$username
@@ -102,8 +101,7 @@ setup_keys () {
     printf "> Setting up SSH keys...\n"
     wait
 
-    printf ">> Enter SSH key identifier: "
-    read identifier
+    read -p ">> Enter SSH key identifier: " identifier
     ssh-keygen -b 4096 -t rsa -C "$identifier"
 
     printf ">>> SSH keys setup.\n"
@@ -118,10 +116,8 @@ setup_static_ip () {
     printf "> Setting up static IP address...\n"
     wait
 
-    printf ">> Enter IP address to use: "
-    read ip
-    printf ">> Enter gateway IP address: "
-    read gateway
+    read -p">> Enter IP address to use: " ip
+    read -p ">> Enter gateway IP address: " gateway
     filename="/etc/netplan/50-cloud-init.yaml"
     cat <<EOF >> $filename
 network:
