@@ -16,11 +16,8 @@ setup_user_variable () {
     then
         user=$user_input
         printf "> You entered: \"$user\".\n"
-        wait
     fi
-
     printf "> Using \"$user\" in script.\n"
-    wait
 }
 
 setup_identifier_variable () {
@@ -33,11 +30,8 @@ setup_identifier_variable () {
     then
         identifier=$identifier_input
         printf "> You entered: \"$identifier\".\n"
-        wait
     fi
-    
     printf "> Using \"$identifier\" as SSH key identifier.\n"
-    wait
 }
 
 setup_ip_variable () {
@@ -50,11 +44,8 @@ setup_ip_variable () {
     then
         ip=$ip_input
         printf "> You entered: \"$ip\".\n"
-        wait
     fi
-    
     printf "> Using \"$ip\" as static IP address.\n"
-    wait
 }
 
 setup_gateway_variable () {
@@ -67,11 +58,8 @@ setup_gateway_variable () {
     then
         gateway=$gateway_input
         printf "> You entered: \"$gateway\".\n"
-        wait
     fi
-    
     printf "> Using \"$gateway\" as gateway IP address.\n"
-    wait
 }
 
 setup_script_variables () {
@@ -87,11 +75,11 @@ update_system () {
 
     printf "> Getting updates...\n"
     wait
-    sudo apt update -y
+    sudo apt update -qq
 
     printf "> Installing updates...\n"
     wait
-    sudo apt upgrade -y
+    sudo apt upgrade -qq
 
     printf ">>> Updates installed.\n"
     wait
@@ -121,18 +109,11 @@ install_packages () {
 
     printf "> Installing Composer...\n"
     wait
-    curl https://getcomposer.org/installer -o composer-setup.php
+    curl -s https://getcomposer.org/installer -o composer-setup.php
     sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
     rm composer-setup.php
 
     printf ">>> Composer installed.\n"
-    wait
-
-    printf "> Installing Glances...\n"
-    wait
-    curl -L https://bit.ly/glances | /bin/bash
-
-    printf ">>> Glances installed.\n"
     wait
 
     printf "> Installing GoAccess...\n"
@@ -211,7 +192,6 @@ setup_commands () {
     # Write aliases to ~/.bashrc
     cat <<EOF >> ~/.bashrc
 alias $user-commands="sed '/alias $user-/p' ~/.bashrc -n"
-alias $user-run-glances="glances"
 alias $user-run-goaccess="goaccess /var/log/nginx/access.log -c"
 alias $user-show-status="htop"
 alias $user-show-private-key="cat ~/.ssh/id_rsa"
@@ -235,6 +215,7 @@ user=$(whoami)
 identifier="local-server"
 ip="192.168.1.250"
 gateway="192.168.1.1"
+
 setup_script_variables
 setup_timezone
 setup_keys
