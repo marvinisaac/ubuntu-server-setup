@@ -164,7 +164,7 @@ setup_timezone () {
 setup_keys () {
     printf "> Setting up SSH keys...\n"
     wait
-    ssh-keygen -b 4096 -t rsa -C "$identifier"
+    ssh-keygen -b 4096 -t rsa -C "$identifier" -q -N
 
     printf ">>> SSH keys setup.\n"
     wait
@@ -237,9 +237,9 @@ ip="192.168.1.250"
 gateway="192.168.1.1"
 setup_script_variables
 setup_timezone
+setup_keys
 update_system
 install_packages
-setup_keys
 setup_static_ip
 setup_terminal
 setup_commands
