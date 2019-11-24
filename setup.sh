@@ -160,7 +160,7 @@ setup_static_ip () {
     wait
 
     filename="/etc/netplan/50-cloud-init.yaml"
-    cat <<EOF >> $filename
+    sudo cat <<EOF >> $filename
 network:
   version: 2
   renderer: networkd
