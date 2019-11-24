@@ -65,7 +65,7 @@ alias () {
 
     # Write aliases to ~/.bashrc
     echo "alias marvin-status=\"htop\"" >> ~/.bashrc
-    echo "alias marvin-exit=\"shutdown -h 1\"" >> ~/.bashrc
+    echo "alias marvin-exit=\"shutdown -h 0\"" >> ~/.bashrc
     
     # Reload terminal to make aliases usable
     source ~/.bashrc
